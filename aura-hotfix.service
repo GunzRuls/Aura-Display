@@ -1,0 +1,8 @@
+[Unit]
+Description=Aura Display Hotfix Update
+
+[Service]
+Type=oneshot
+ExecStart=/home/pi/Aura-Display/update.sh hotfix
+StandardOutput=append:/var/log/aura-update.log
+StandardError=append:/var/log/aura-update.log
