@@ -184,6 +184,9 @@ function App() {
   const [time, setTime] = useState(new Date());
   const [zipcode, setZipcode] = useState("");
   const [setupError, setSetupError] = useState("");
+  const [weatherError, setWeatherError] = useState(false);
+  const retryRef = useRef(null);
+
   const [brightness, setBrightness] = useState(() => {
     const saved = Number(localStorage.getItem("brightness") ?? 100);
     document.body.style.filter = `brightness(${saved / 100})`;
@@ -228,9 +231,25 @@ function App() {
 
   const fetchWeather = () => {
     fetch(`${API}/weather`)
-      .then((res) => res.json())
-      .then((data) => setWeather(data))
-      .catch((err) => console.log("Fetch error:", err));
+      .then((res) => {
+        if (!res.ok) throw new Error("Bad response");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.error) throw new Error("API error");
+        setWeather(data);
+        setWeatherError(false);
+        // Clear any existing retry interval on success
+        clearInterval(retryRef.current);
+        retryRef.current = null;
+      })
+      .catch(() => {
+        setWeatherError(true);
+        // Start a retry every 30 seconds if not already retrying
+        if (!retryRef.current) {
+          retryRef.current = setInterval(fetchWeather, 30 * 1000);
+        }
+      });
   };
 
   const handleSetupSubmit = () => {
@@ -300,7 +319,13 @@ function App() {
       <div className="divider" />
 
       <div className="weather-section">
-        {weather ? (
+        {weatherError ? (
+          <div className="weather-error">
+            <div className="weather-error-icon">⚠</div>
+            <div className="weather-error-title">No Connection</div>
+            <div className="weather-error-sub">Retrying every 30 seconds…</div>
+          </div>
+        ) : weather ? (
           <>
             <div className="temp">{weather.temperature}°F</div>
             <div className="condition">{weather.condition}</div>
