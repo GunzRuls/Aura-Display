@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import "./App.css";
 
 const API = "http://127.0.0.1:8000";
@@ -184,6 +184,12 @@ function App() {
   const [time, setTime] = useState(new Date());
   const [zipcode, setZipcode] = useState("");
   const [setupError, setSetupError] = useState("");
+  const [brightness, setBrightness] = useState(() => {
+    // Load saved brightness from localStorage, default to 100%
+    return Number(localStorage.getItem("brightness") ?? 100);
+  });
+  const [showBrightness, setShowBrightness] = useState(false);
+  const sliderTimeout = useRef(null);
 
   useEffect(() => {
     fetch(`${API}/config`)
@@ -208,6 +214,15 @@ function App() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleBrightnessChange = (val) => {
+    const num = Number(val);
+    setBrightness(num);
+    localStorage.setItem("brightness", num);
+    // Auto-close slider after 4 seconds of no interaction
+    clearTimeout(sliderTimeout.current);
+    sliderTimeout.current = setTimeout(() => setShowBrightness(false), 4000);
+  };
 
   const fetchWeather = () => {
     fetch(`${API}/weather`)
@@ -272,7 +287,7 @@ function App() {
 
   // ── Display screen ────────────────────────────────────────────
   return (
-    <div className="container">
+    <div className="container" style={{ filter: `brightness(${brightness / 100})` }}>
       <Stars />
       <div className="clock-section">
         <div className="clock">{formatTime(time)}</div>
@@ -302,6 +317,40 @@ function App() {
           <div className="loading">Loading weather…</div>
         )}
       </div>
+
+      {/* Brightness corner button */}
+      <button
+        className="brightness-btn"
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          setShowBrightness((prev) => {
+            if (!prev) {
+              clearTimeout(sliderTimeout.current);
+              sliderTimeout.current = setTimeout(() => setShowBrightness(false), 4000);
+            }
+            return !prev;
+          });
+        }}
+        aria-label="Adjust brightness"
+      >
+        ☀
+      </button>
+
+      {/* Brightness slider panel */}
+      {showBrightness && (
+        <div className="brightness-panel" onPointerDown={(e) => e.stopPropagation()}>
+          <span className="brightness-label">Brightness</span>
+          <input
+            className="brightness-slider"
+            type="range"
+            min="10"
+            max="100"
+            value={brightness}
+            onChange={(e) => handleBrightnessChange(e.target.value)}
+          />
+          <span className="brightness-value">{brightness}%</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -287,6 +287,83 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* ── Brightness control ── */
+.brightness-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background 0.2s, color 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.brightness-btn:active {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.brightness-panel {
+  position: fixed;
+  bottom: 74px;
+  right: 16px;
+  background: rgba(10, 10, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+  animation: fadeIn 0.2s ease;
+  min-width: 180px;
+}
+
+.brightness-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.brightness-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  cursor: pointer;
+}
+
+.brightness-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.brightness-value {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /* ── Animation ── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(14px); }
