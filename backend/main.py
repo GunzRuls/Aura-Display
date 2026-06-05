@@ -48,8 +48,12 @@ def get_weather(city: str):
 CONFIG_PATH = "config.json"
 
 def read_config():
-    with open(CONFIG_PATH, "r") as f:
-        return json.load(f)
+    try:
+        with open(CONFIG_PATH, "r") as f:
+            content = f.read().strip()
+            return json.loads(content) if content else {}
+    except (json.JSONDecodeError, FileNotFoundError):
+        return {}
 
 def write_config(data: dict):
     with open(CONFIG_PATH, "w") as f:
