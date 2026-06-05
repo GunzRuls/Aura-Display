@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\joelf\\\\Downloads\\\\smart-desk-display\" -Recurse -Force | Select-Object -Property FullName | ForEach-Object { $_.FullName } | Sort-Object)",
+      "Bash(gh api *)",
+      "WebFetch(domain:github.com)"
+    ]
+  }
+}

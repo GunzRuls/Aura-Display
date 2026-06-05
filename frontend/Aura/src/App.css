@@ -1,0 +1,294 @@
+/* ── Theme defaults (overridden at runtime by applyTheme()) ── */
+body {
+  --bg-from:        #00000f;
+  --bg-to:          #05051e;
+  --text-primary:   #ffffff;
+  --text-secondary: #ccccdd;
+  --text-muted:     #8888aa;
+  --accent:         #667acc;
+  --star-opacity:   1;
+}
+
+/* ── Base ── */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  background: linear-gradient(160deg, var(--bg-from) 0%, var(--bg-to) 100%);
+  color: var(--text-primary);
+  overflow: hidden;
+  transition: background 3s ease, color 1.5s ease;
+}
+
+/* ── Starfield ── */
+.starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--star-opacity);
+  transition: opacity 3s ease;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  animation: twinkle var(--dur, 4s) ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50%       { opacity: 0.2; transform: scale(0.6); }
+}
+
+/* ── Nebula clouds ── */
+.nebula-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.nebula-cloud {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(55px);
+  opacity: 0.5;
+  animation: nebula-drift linear infinite;
+  will-change: transform, opacity;
+}
+
+.nebula-cloud.color-a {
+  background: radial-gradient(ellipse at center, var(--nebula-a) 0%, transparent 70%);
+}
+
+.nebula-cloud.color-b {
+  background: radial-gradient(ellipse at center, var(--nebula-b) 0%, transparent 70%);
+}
+
+@keyframes nebula-drift {
+  0%   { transform: scale(1)    translate(0px,   0px);  opacity: 0.45; }
+  25%  { transform: scale(1.08) translate(12px, -8px);  opacity: 0.55; }
+  50%  { transform: scale(1.04) translate(6px,  14px);  opacity: 0.38; }
+  75%  { transform: scale(1.10) translate(-10px, 6px);  opacity: 0.50; }
+  100% { transform: scale(1)    translate(0px,   0px);  opacity: 0.45; }
+}
+
+/* ── Layout ── */
+.container {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  padding: 40px 24px;
+}
+
+/* ── Clock section ── */
+.clock-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 8px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.clock {
+  font-size: 96px;
+  font-weight: 100;
+  letter-spacing: -4px;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+}
+
+.date {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+/* ── Divider ── */
+.divider {
+  width: 100%;
+  max-width: 280px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 20px 0;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+/* ── Weather section ── */
+.weather-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 8px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.temp {
+  font-size: 80px;
+  font-weight: 200;
+  letter-spacing: -3px;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+}
+
+.condition {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.weather-details {
+  display: flex;
+  gap: 36px;
+  margin-top: 10px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.detail-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+}
+
+.detail-value {
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--text-secondary);
+}
+
+.location {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+.loading {
+  font-size: 16px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* ── Setup screen ── */
+.setup-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.setup-title {
+  font-size: 34px;
+  font-weight: 200;
+  margin: 0;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+.setup-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.setup-display {
+  font-size: 48px;
+  font-weight: 200;
+  letter-spacing: 14px;
+  min-width: 240px;
+  text-align: center;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 10px;
+  color: var(--text-primary);
+  opacity: 0.9;
+}
+
+.setup-placeholder {
+  color: var(--text-muted);
+  letter-spacing: 10px;
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.numpad-key {
+  width: 88px;
+  height: 88px;
+  font-size: 28px;
+  font-weight: 300;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+  backdrop-filter: blur(4px);
+}
+
+.numpad-key:active {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent);
+}
+
+.numpad-confirm {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  opacity: 0.9;
+}
+
+.numpad-confirm:active {
+  opacity: 1;
+}
+
+.numpad-back {
+  color: var(--text-secondary);
+}
+
+.setup-error {
+  font-size: 13px;
+  color: #ff6b6b;
+  letter-spacing: 0.5px;
+}
+
+/* ── Animation ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
