@@ -185,8 +185,9 @@ function App() {
   const [zipcode, setZipcode] = useState("");
   const [setupError, setSetupError] = useState("");
   const [brightness, setBrightness] = useState(() => {
-    // Load saved brightness from localStorage, default to 100%
-    return Number(localStorage.getItem("brightness") ?? 100);
+    const saved = Number(localStorage.getItem("brightness") ?? 100);
+    document.body.style.filter = `brightness(${saved / 100})`;
+    return saved;
   });
   const [showBrightness, setShowBrightness] = useState(false);
   const sliderTimeout = useRef(null);
@@ -219,6 +220,7 @@ function App() {
     const num = Number(val);
     setBrightness(num);
     localStorage.setItem("brightness", num);
+    document.body.style.filter = `brightness(${num / 100})`;
     // Auto-close slider after 4 seconds of no interaction
     clearTimeout(sliderTimeout.current);
     sliderTimeout.current = setTimeout(() => setShowBrightness(false), 4000);
@@ -287,7 +289,8 @@ function App() {
 
   // ── Display screen ────────────────────────────────────────────
   return (
-    <div className="container" style={{ filter: `brightness(${brightness / 100})` }}>
+    <div className="container">
+      <Nebula />
       <Stars />
       <div className="clock-section">
         <div className="clock">{formatTime(time)}</div>
