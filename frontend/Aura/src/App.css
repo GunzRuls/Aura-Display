@@ -149,6 +149,12 @@ body {
   line-height: 1;
   color: #ffffff;
   text-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.temp:active {
+  opacity: 0.7;
 }
 
 .condition {
@@ -454,7 +460,7 @@ body {
 .theme-btn {
   position: fixed;
   bottom: 20px;
-  right: 124px;
+  right: 72px;
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -472,33 +478,6 @@ body {
 }
 
 .theme-btn:active {
-  background: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* ── Unit toggle button ── */
-.unit-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 72px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  transition: background 0.2s, color 0.2s;
-  backdrop-filter: blur(4px);
-}
-
-.unit-btn:active {
   background: rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.9);
 }
@@ -578,6 +557,63 @@ body {
 .brightness-value {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Change location modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 36px 32px;
+  background: rgba(10, 10, 30, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+}
+
+.modal-title {
+  font-size: 28px;
+  font-weight: 200;
+  margin: 0;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+.modal-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* location text — shows edit hint */
+.location {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.location:active {
+  opacity: 0.6;
+}
+
+.edit-hint {
+  font-size: 10px;
+  opacity: 0.3;
+  margin-left: 4px;
+  vertical-align: middle;
 }
 
 /* ── Animation ── */

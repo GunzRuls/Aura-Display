@@ -373,6 +373,9 @@ function App() {
     return saved;
   });
   const [showBrightness, setShowBrightness] = useState(false);
+  const [showChangeLocation, setShowChangeLocation] = useState(false);
+  const [newZipcode, setNewZipcode] = useState("");
+  const [changeLocationError, setChangeLocationError] = useState("");
 
   // Fade out → switch screen → fade in
   const goToScreen = (next) => {
@@ -456,6 +459,31 @@ function App() {
       localStorage.setItem("useCelsius", !prev);
       return !prev;
     });
+  };
+
+  const handleNewZipcodePress = (value) => {
+    if (value === "⌫") {
+      setNewZipcode((prev) => prev.slice(0, -1));
+    } else if (newZipcode.length < 5) {
+      setNewZipcode((prev) => prev + value);
+    }
+  };
+
+  const handleChangeLocationSubmit = () => {
+    setChangeLocationError("");
+    fetch(`${API}/config`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ location: newZipcode }),
+    })
+      .then((res) => { if (!res.ok) throw new Error(); return res.json(); })
+      .then(() => {
+        setShowChangeLocation(false);
+        setNewZipcode("");
+        setWeather(null);       // clear old weather so it refreshes
+        fetchWeather();         // fetch immediately with new location
+      })
+      .catch(() => setChangeLocationError("Could not save. Check the zipcode."));
   };
 
   const fetchWeather = () => {
@@ -578,7 +606,7 @@ function App() {
           </div>
         ) : weather ? (
           <>
-            <div className="temp">{tempDisplay}</div>
+            <div className="temp" onPointerDown={toggleUnit}>{tempDisplay}</div>
             <div className="condition">{weather.condition}</div>
             <div className="weather-details">
               <div className="detail-item">
@@ -590,21 +618,49 @@ function App() {
                 <span className="detail-value">{weather.humidity}%</span>
               </div>
             </div>
-            <div className="location">{weather.city}, {weather.region}</div>
+            <div
+              className="location"
+              onPointerDown={() => { setNewZipcode(""); setChangeLocationError(""); setShowChangeLocation(true); }}
+            >
+              {weather.city}, {weather.region} <span className="edit-hint">✎</span>
+            </div>
           </>
         ) : (
           <div className="loading">Loading weather…</div>
         )}
       </div>
 
+      {/* Change location modal */}
+      {showChangeLocation && (
+        <div className="modal-overlay" onPointerDown={() => setShowChangeLocation(false)}>
+          <div className="modal-box" onPointerDown={(e) => e.stopPropagation()}>
+            <h2 className="modal-title">Change Location</h2>
+            <p className="modal-sub">Enter your new zipcode</p>
+            <div className="setup-display">
+              {newZipcode || <span className="setup-placeholder">· · · · ·</span>}
+            </div>
+            <div className="numpad">
+              {NUMPAD_KEYS.map((key) => (
+                <button
+                  key={key}
+                  className={`numpad-key ${key === "✓" ? "numpad-confirm" : ""} ${key === "⌫" ? "numpad-back" : ""}`}
+                  onPointerDown={() => {
+                    if (key === "✓") { if (newZipcode.length === 5) handleChangeLocationSubmit(); }
+                    else handleNewZipcodePress(key);
+                  }}
+                >
+                  {key}
+                </button>
+              ))}
+            </div>
+            {changeLocationError && <p className="setup-error">{changeLocationError}</p>}
+          </div>
+        </div>
+      )}
+
       {/* Theme mode toggle */}
       <button className="theme-btn" onPointerDown={toggleThemeMode} title={themeMode === "space" ? "Switch to weather theme" : "Switch to space theme"}>
         {themeMode === "space" ? "⛅" : "✦"}
-      </button>
-
-      {/* °F / °C toggle */}
-      <button className="unit-btn" onPointerDown={toggleUnit}>
-        {useCelsius ? "°F" : "°C"}
       </button>
 
       {/* Brightness corner button */}
