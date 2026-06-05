@@ -376,6 +376,7 @@ function App() {
   const [showChangeLocation, setShowChangeLocation] = useState(false);
   const [newZipcode, setNewZipcode] = useState("");
   const [changeLocationError, setChangeLocationError] = useState("");
+  const [weatherFading, setWeatherFading] = useState(false);
 
   // Fade out → switch screen → fade in
   const goToScreen = (next) => {
@@ -480,8 +481,12 @@ function App() {
       .then(() => {
         setShowChangeLocation(false);
         setNewZipcode("");
-        setWeather(null);       // clear old weather so it refreshes
-        fetchWeather();         // fetch immediately with new location
+        setWeatherFading(true);
+        setTimeout(() => {
+          setWeather(null);
+          setWeatherFading(false);
+          fetchWeather();
+        }, 400);
       })
       .catch(() => setChangeLocationError("Could not save. Check the zipcode."));
   };
@@ -597,7 +602,7 @@ function App() {
 
       <div className="divider" />
 
-      <div className="weather-section">
+      <div className={`weather-section${weatherFading ? " fade-out" : ""}`}>
         {weatherError ? (
           <div className="weather-error">
             <div className="weather-error-icon">⚠</div>

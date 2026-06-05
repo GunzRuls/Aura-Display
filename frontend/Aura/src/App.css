@@ -1,3 +1,28 @@
+/* ── Register CSS variables as animatable color values ── */
+@property --bg-from {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #00000f;
+}
+
+@property --bg-to {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #05051e;
+}
+
+@property --nebula-a {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #2233aa;
+}
+
+@property --nebula-b {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #551188;
+}
+
 /* ── Theme defaults (overridden at runtime by applyTheme()) ── */
 body {
   --bg-from:        #00000f;
@@ -20,7 +45,7 @@ body {
   background: linear-gradient(160deg, var(--bg-from) 0%, var(--bg-to) 100%);
   color: var(--text-primary);
   overflow: hidden;
-  transition: background 3s ease, color 1.5s ease;
+  transition: --bg-from 3s ease, --bg-to 3s ease, --nebula-a 3s ease, --nebula-b 3s ease, color 1.5s ease;
 }
 
 /* ── Starfield ── */
@@ -140,6 +165,11 @@ body {
   flex: 1;
   gap: 8px;
   animation: fadeIn 1s ease-in-out;
+  transition: opacity 0.4s ease;
+}
+
+.weather-section.fade-out {
+  opacity: 0;
 }
 
 .temp {
